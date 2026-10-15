@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="bn"><head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8"><title>AI Agent</title>
+<style>
+body{font-family:sans-serif;margin:0;padding:16px;background:#f2f4f8;color:#172033}
+h1{text-align:center}#chat{background:white;padding:14px;min-height:280px;max-height:48vh;overflow:auto;border-radius:14px;margin-bottom:12px;overflow-wrap:anywhere}
+.controls{display:flex;gap:7px;margin:8px 0}input{flex:1;min-width:0;padding:13px;border:1px solid #ccd2dd;border-radius:10px;font-size:16px}
+button{padding:12px;border:0;border-radius:10px;background:#245bdb;color:white;font-size:15px}
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.quick button{background:#35445f}
+</style></head><body>
+<h1>🤖 AI Agent</h1>
+<div id="chat"><p><b>AI Agent:</b> Hello! How can I help you?</p></div>
+<div class="controls"><input id="input" placeholder="কমান্ড লিখুন..."><button onclick="send()">Send</button><button onclick="AndroidVoice.startVoice()">🎤</button></div>
+<div class="controls"><button onclick="saveChatPdf()">Save Chat as PDF</button></div>
+<div class="quick">
+<button onclick="runCommand('সেটিংস খোলো')">⚙️ Settings</button>
+<button onclick="runCommand('ইউটিউব খোলো')">▶ YouTube</button>
+<button onclick="runCommand('ক্যামেরা খোলো')">📷 Camera</button>
+<button onclick="runCommand('ব্রাউজার খোলো')">🌐 Browser</button>
+<button onclick="runCommand('ডায়ালার খোলো')">📞 Phone Dialer</button>
+<button onclick="PhoneControl.openSettings()">⚙️ Settings</button>
+<button onclick="PhoneControl.back()">↩ Back</button>
+<button onclick="PhoneControl.home()">⌂ Home</button>
+<button onclick="PhoneControl.recents()">▣ Recent Apps</button>
+<button onclick="PhoneControl.notifications()">🔔 Notifications</button>
+<button onclick="PhoneControl.quickSettings()">⚙ Quick Settings</button>
+<button onclick="PhoneControl.openAccessibilitySettings()">Enable Phone Control</button>
+</div>
+<script>
+function saveChatPdf(){let text=document.getElementById("chat").innerText;if(window.AndroidPDF){AndroidPDF.saveTextAsPdf(text,"AI-Agent-Chat");}else{alert("PDF সুবিধা প্রস্তুত নয়");}}
+const input=document.getElementById('input'),chat=document.getElementById('chat');
+function line(who,msg){let p=document.createElement('p'),b=document.createElement('b');b.textContent=who+': ';p.appendChild(b);p.appendChild(document.createTextNode(msg));chat.appendChild(p);chat.scrollTop=chat.scrollHeight}
+window.showAgentMessage=m=>line('AI Agent',m);
+window.setVoiceText=t=>{input.value=t;send()};
+function runCommand(msg){
+ let m=msg.toLowerCase();
+ if(m.includes('সেটিং')||m.includes('settings')){PhoneControl.openSettings();line('AI Agent','Settings খুলছি');return}
+ if(m.includes('ইউটিউব')||m.includes('youtube')){PhoneControl.openYouTube();line('AI Agent','YouTube খুলছি');return}
+ if(m.includes('ক্যামেরা')||m.includes('camera')){PhoneControl.openCamera();line('AI Agent','Camera খুলছি');return}
+ if(m.includes('ব্রাউজার')||m.includes('browser')||m.includes('google')){PhoneControl.openBrowser();line('AI Agent','Browser খুলছি');return}
+ if(m.includes('ডায়ালার')||m.includes('dialer')||m.includes('ফোন খোলো')){PhoneControl.openDialer();line('AI Agent','Phone dialer খুলছি');return}
+ return false;
+}
+async function send(){
+ let message=input.value.trim();if(!message)return;input.value='';
+ line('You',message);
+ if(runCommand(message)!==false)return;
+ try{
+  let r=await fetch('http://192.0.0.2:8006/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message})});
+  if(!r.ok)throw Error('HTTP '+r.status);
+  let d=await r.json();let reply=d.reply||'No reply received';line('AI Agent',reply);AndroidVoice.speak(reply);
+ }catch(e){line('AI Agent','Backend connection failed. Check that the backend is running and the phone can reach 192.0.0.2:8006.')}
+}
+input.addEventListener('keydown',e=>{if(e.key==='Enter')send()});
+</script></body></html>
