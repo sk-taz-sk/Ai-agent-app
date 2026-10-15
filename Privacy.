@@ -1,0 +1,24 @@
+# Privacy Policy for AI Agent
+
+Last updated: October 16, 2026
+
+## Introduction
+AI Agent is a personal assistant application.
+
+## Information You Provide
+Messages and voice input may be processed by the app's backend and AI service to generate responses.
+
+## Voice Input
+The app may use your device's speech recognition feature to convert speech into text.
+
+## Data Storage
+The backend may store information such as your preferred name to support memory features.
+
+## Third-Party Services
+AI responses may use Google's Gemini service. Information sent to that service is subject to Google's privacy terms.
+
+## Data Security
+Please do not submit passwords, payment details, or other sensitive information.
+
+## Contact
+For questions, contact the developer through the AI Agent GitHub repository.
