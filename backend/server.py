@@ -14,6 +14,25 @@ def clean_text(text):
 
 class Handler(BaseHTTPRequestHandler):
 
+    def do_GET(self):
+        if self.path == "/":
+            result = {
+                "status": "ok",
+                "message": "AI Agent backend is running"
+            }
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            self.wfile.write(json.dumps(result).encode("utf-8"))
+        else:
+            self.send_error(404)
+
+    def do_HEAD(self):
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+
     def do_OPTIONS(self):
         self.send_response(204)
         self.send_header("Access-Control-Allow-Origin", "*")
