@@ -41,16 +41,16 @@ function runCommand(msg){
  if(m.includes('ব্রাউজার')||m.includes('browser')||m.includes('google')){PhoneControl.openBrowser();line('AI Agent','Browser খুলছি');return}
  if(m.includes('ডায়ালার')||m.includes('dialer')||m.includes('ফোন খোলো')){PhoneControl.openDialer();line('AI Agent','Phone dialer খুলছি');return}
  return false;
-}
-async function send(){
+}async function send(){
  let message=input.value.trim();if(!message)return;input.value='';
  line('You',message);
  if(runCommand(message)!==false)return;
  try{
-  let r=await fetch('http://192.0.0.2:8006/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message})});
+  let r=await fetch('https://ai-agent-app-f3a0.onrender.com/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message})});
   if(!r.ok)throw Error('HTTP '+r.status);
   let d=await r.json();let reply=d.reply||'No reply received';line('AI Agent',reply);AndroidVoice.speak(reply);
- }catch(e){line('AI Agent','Backend connection failed. Check that the backend is running and the phone can reach 192.0.0.2:8006.')}
+ }catch(e){line('AI Agent','Cloud connection failed. Please try again.')}
 }
 input.addEventListener('keydown',e=>{if(e.key==='Enter')send()});
+
 </script></body></html>
