@@ -57,8 +57,8 @@ class Handler(BaseHTTPRequestHandler):
               self.wfile.write(json.dumps(result).encode())
               return
 
-        if (prompt.lower().startswith("my name is ") or prompt.startswith("আমার নাম ")) and prompt.strip().rstrip(chr(63)+chr(33)+"।") not in ["আমার নাম কি", "আমার নাম কী"]:
-            save_memory("name", prompt[11:].strip() if prompt.lower().startswith("my name is ") else prompt[9:].strip())
+        if (prompt.lower().startswith(("my name is ", "amar name ", "amar nam ", "amar naam ")) or prompt.startswith("আমার নাম ")) and prompt.strip().rstrip(chr(63)+chr(33)+"।") not in ["আমার নাম কি", "আমার নাম কী"]:
+            lower_prompt = prompt.lower().strip(); name = prompt[11:].strip() if lower_prompt.startswith("my name is ") else prompt[len("amar name "):].strip() if lower_prompt.startswith("amar name ") else prompt[len("amar naam "):].strip() if lower_prompt.startswith("amar naam ") else prompt[len("amar nam "):].strip() if lower_prompt.startswith("amar nam ") else prompt[len("আমার নাম "):].strip(); save_memory("name", name.rstrip("?!। "))
             result = {"reply": "ঠিক আছে, তোমার নাম " + str(get_memory("name")) + " মনে রাখব।"}
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
