@@ -82,7 +82,7 @@ class Handler(BaseHTTPRequestHandler):
             last_error = None
             for attempt in range(3):
                 try:
-                    response = client.models.generate_content(model="gemini-3.8-flash", contents=prompt)
+                    response = client.models.generate_content(model="gemini-3.8-flash", contents="You are a helpful AI assistant. Reply in the same language as the user, including Bengali, Banglish, Hindi, or English. Be accurate, clear, friendly, and explain step by step when useful. User message: " + prompt)
                     result = {"reply": clean_text(response.text)}
                     last_error = None
                     break
