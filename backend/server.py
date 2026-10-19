@@ -88,7 +88,7 @@ class Handler(BaseHTTPRequestHandler):
                     break
                 except Exception as e:
                     last_error = e
-                    print("Gemini API error:", type(e).__name__, flush=True)
+                    print("Gemini API error:", type(e).__name__, "code=", getattr(e, "code", ""), "message=", getattr(e, "message", ""), flush=True)
                     if "503" in str(e) and attempt < 2:
                         time.sleep(3)
             if last_error is not None:
@@ -109,4 +109,3 @@ if __name__ == "__main__":
     server = ThreadingHTTPServer(("0.0.0.0", int(os.environ.get("PORT", 8006))), Handler)
     print("AI Agent backend running on port configured by Render")
     server.serve_forever()
-print("Gemini API error:", type(e).__name__, flush=True)
